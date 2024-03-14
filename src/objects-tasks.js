@@ -112,8 +112,8 @@ function isEmptyObject(obj) {
  *    immutableObj.newProp = 'new';
  *    console.log(immutableObj) => {a: 1, b: 2}
  */
-function makeImmutable(/* obj */) {
-  throw new Error('Not implemented');
+function makeImmutable(obj) {
+  return Object.freeze(obj);
 }
 
 /**
@@ -144,8 +144,25 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let currentMoney = 0;
+  const price = 25;
+  let result = true;
+  queue.forEach((personMoney) => {
+    if (result === false) {
+      return;
+    }
+    const refund = personMoney - price;
+    if (personMoney === price) {
+      currentMoney += personMoney;
+      result = true;
+    } else if (personMoney > price && refund <= currentMoney) {
+      currentMoney += personMoney;
+      currentMoney -= refund;
+      result = true;
+    } else result = false;
+  });
+  return result;
 }
 
 /**
