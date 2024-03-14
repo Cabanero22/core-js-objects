@@ -155,11 +155,9 @@ function sellTickets(queue) {
     const refund = personMoney - price;
     if (personMoney === price) {
       currentMoney += personMoney;
-      result = true;
     } else if (personMoney > price && refund <= currentMoney) {
       currentMoney += personMoney;
       currentMoney -= refund;
-      result = true;
     } else result = false;
   });
   return result;
@@ -178,8 +176,12 @@ function sellTickets(queue) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = function getArea() {
+    return this.width * this.height;
+  };
 }
 
 /**
