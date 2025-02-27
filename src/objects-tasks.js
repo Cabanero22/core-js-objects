@@ -441,7 +441,9 @@ class MySuperBaseElementSelector {
   }
 
   isAlreadyExist(value) {
-    console.log(this);
+    if (this) {
+      this.a = 1;
+    }
     if (value) {
       throw new Error(
         'Element, id and pseudo-element should not occur more then one time inside the selector'
@@ -450,7 +452,9 @@ class MySuperBaseElementSelector {
   }
 
   wrongPosition() {
-    console.log(this);
+    if (this) {
+      this.a = 1;
+    }
     throw new Error(
       'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element'
     );
