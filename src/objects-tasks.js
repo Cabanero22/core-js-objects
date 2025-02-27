@@ -356,33 +356,138 @@ function group(array, keySelector, valueSelector) {
  *  For more examples see unit tests.
  */
 
+class MySuperBaseElementSelector {
+  props = {};
+
+  element(value) {
+    this.isAlreadyExist(this.props.element);
+    if (Object.keys(this.props).length > 0) {
+      this.wrongPosition();
+    }
+    this.props.element = value;
+    return this;
+  }
+
+  id(value) {
+    this.isAlreadyExist(this.props.id);
+    if (Object.keys(this.props).length > 0) {
+      if (Object.keys(this.props).some((prop) => prop !== 'element')) {
+        this.wrongPosition();
+      }
+    }
+    this.props.id = `#${value}`;
+    return this;
+  }
+
+  class(value) {
+    if (Object.keys(this.props).length > 0) {
+      if (
+        Object.keys(this.props).some(
+          (prop) => prop !== 'element' && prop !== 'id' && prop !== 'class'
+        )
+      ) {
+        this.wrongPosition();
+      }
+    }
+    if (this.props.class) {
+      this.props.class += `.${value}`;
+    } else {
+      this.props.class = `.${value}`;
+    }
+    return this;
+  }
+
+  attr(value) {
+    if (Object.keys(this.props).length > 0) {
+      if (
+        Object.keys(this.props).some(
+          (prop) => prop === 'pseudoClass' || prop === 'pseudoElement'
+        )
+      ) {
+        this.wrongPosition();
+      }
+    }
+    if (this.props.attribute) {
+      this.props.attribute += `[${value}]`;
+    } else {
+      this.props.attribute = `[${value}]`;
+    }
+    return this;
+  }
+
+  pseudoClass(value) {
+    if (Object.keys(this.props).length > 0) {
+      if (Object.keys(this.props).some((prop) => prop === 'pseudoElement')) {
+        this.wrongPosition();
+      }
+    }
+    if (this.props.pseudoClass) {
+      this.props.pseudoClass += `:${value}`;
+    } else {
+      this.props.pseudoClass = `:${value}`;
+    }
+    return this;
+  }
+
+  pseudoElement(value) {
+    this.isAlreadyExist(this.props.pseudoElement);
+    this.props.pseudoElement = `::${value}`;
+    return this;
+  }
+
+  stringify() {
+    const allProps = Object.values(this.props);
+    return allProps.join('');
+  }
+
+  isAlreadyExist(value) {
+    console.log(this);
+    if (value) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector'
+      );
+    }
+  }
+
+  wrongPosition() {
+    console.log(this);
+    throw new Error(
+      'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element'
+    );
+  }
+}
+
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    return new MySuperBaseElementSelector().element(value);
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    return new MySuperBaseElementSelector().id(value);
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    return new MySuperBaseElementSelector().class(value);
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    return new MySuperBaseElementSelector().attr(value);
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    return new MySuperBaseElementSelector().pseudoClass(value);
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    return new MySuperBaseElementSelector().pseudoElement(value);
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    return {
+      stringify() {
+        return `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+      },
+    };
   },
 };
 
